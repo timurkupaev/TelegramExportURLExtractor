@@ -73,7 +73,7 @@ class URLExtractorApp:
         if not self.json_files:
             messagebox.showwarning("Warning", "No files loaded.")
             return
-        self.extracted_urls = []
+        self.extracted_urls = set()
         for file_path in self.json_files:
             with open(file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -81,9 +81,8 @@ class URLExtractorApp:
                     if isinstance(message.get("text"), list):
                         for text_item in message["text"]:
                             if isinstance(text_item, dict) and text_item.get("type") == "link":
-                                self.extracted_urls.append(text_item.get("text"))
-        self.display_urls(self.extracted_urls)
-
+                                self.extracted_urls.add(text_item.get("text"))
+        self.display_urls(list(self.extracted_urls))
     def save_urls(self):
         """
         Open a dialog for the user to choose a filename and location to save the extracted URLs
@@ -108,3 +107,6 @@ class URLExtractorApp:
 if __name__ == "__main__":
     URLExtractor = URLExtractorApp()
     URLExtractor.root.mainloop()
+
+
+
